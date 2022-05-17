@@ -13,7 +13,28 @@ export class AppService {
       topic: this.configService.get<string>('KAFKA_TOPIC_NAME'),
       messages: [
         {
-          value: 'Hello world',
+          key: 'HIGH_PRIORITY',
+          value: 'Hello world from HIGH_PRIORITY partition',
+        },
+        {
+          key: 'HIGH_PRIORITY',
+          value: 'Hello world from HIGH_PRIORITY partition',
+        },
+        {
+          key: 'HIGH_PRIORITY',
+          value: 'Hello world from HIGH_PRIORITY partition',
+        },
+        {
+          key: 'MEDIUM_PRIORITY',
+          value: 'Hello world partition MEDIUM_PRIORITY partition',
+        },
+        {
+          key: 'MEDIUM_PRIORITY',
+          value: 'Hello world partition MEDIUM_PRIORITY partition',
+        },
+        {
+          key: 'MEDIUM_PRIORITY',
+          value: 'Hello world partition MEDIUM_PRIORITY partition',
         },
       ],
     });
