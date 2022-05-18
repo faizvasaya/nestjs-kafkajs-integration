@@ -20,19 +20,50 @@ export class ProducerService implements OnModuleInit, OnApplicationShutdown {
     brokers: [this.configService.get<string>('KAFKA_BROKER_URL')],
   });
 
+  private highPriorityPartitions = [0, 1, 2, 3, 4, 5, 6];
+  private highPriorityPartitionIndex = 0;
+
+  private mediumPriorityPartitions = [7, 8];
+  private mediumPriorityPartitionIndex = 0;
+
   private readonly producer: Producer = this.kafka.producer({
     createPartitioner: () => {
       return (args: PartitionerArgs) => {
         let partitionNumber = 0;
         if (args.message.key === 'HIGH_PRIORITY') {
-          partitionNumber = this.getRandomNumberBetween(0, 1);
+          partitionNumber = this.getNextHighPartition();
         } else if (args.message.key === 'MEDIUM_PRIORITY') {
-          partitionNumber = 2;
+          partitionNumber = this.getNextMediumPartition();
+        } else if (args.message.key === 'LOW_PRIORITY') {
+          partitionNumber = 9;
         }
+
         return partitionNumber;
       };
     },
   });
+
+  getNextHighPartition(): number {
+    if (
+      this.highPriorityPartitionIndex ===
+      this.highPriorityPartitions.length - 1
+    ) {
+      this.highPriorityPartitionIndex = -1;
+    }
+    ++this.highPriorityPartitionIndex;
+    return this.highPriorityPartitions[this.highPriorityPartitionIndex];
+  }
+
+  getNextMediumPartition(): number {
+    if (
+      this.mediumPriorityPartitionIndex ===
+      this.mediumPriorityPartitions.length - 1
+    ) {
+      this.mediumPriorityPartitionIndex = -1;
+    }
+    ++this.mediumPriorityPartitionIndex;
+    return this.mediumPriorityPartitions[this.mediumPriorityPartitionIndex];
+  }
 
   async onModuleInit() {
     await this.producer.connect();

@@ -1,6 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ConsumerService } from './kafka/consumer.service';
+import { Utility } from './commons/utility';
 
 @Injectable()
 export class TestConsumer implements OnModuleInit {
@@ -10,16 +11,16 @@ export class TestConsumer implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 10; i++) {
       await this.consumerService.consume(
-        i,
         {
           topics: [this.configService.get<string>('KAFKA_TOPIC_NAME')],
         },
         {
-          partitionsConsumedConcurrently: 2,
+          partitionsConsumedConcurrently: 1,
           eachMessage: async ({ topic, partition, message }) => {
-            console.log({
+            await Utility.sleep(5000);
+            console.log(`------------------------`, {
               value: message.value.toString(),
               topic: topic.toString(),
               partition: partition.toString(),

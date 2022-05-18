@@ -24,7 +24,7 @@ export class KafkaAdminService implements OnModuleInit, OnApplicationShutdown {
         topics: [
           {
             topic: this.configService.get<string>('KAFKA_TOPIC_NAME'),
-            numPartitions: 3,
+            numPartitions: 10,
             replicationFactor: 1,
           },
         ],

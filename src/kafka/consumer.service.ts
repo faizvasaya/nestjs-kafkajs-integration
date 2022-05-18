@@ -19,11 +19,7 @@ export class ConsumerService implements OnApplicationShutdown {
 
   private readonly consumers: Consumer[] = [];
 
-  async consume(
-    consumerIndex: number,
-    topic: ConsumerSubscribeTopics,
-    config: ConsumerRunConfig,
-  ) {
+  async consume(topic: ConsumerSubscribeTopics, config: ConsumerRunConfig) {
     const consumer = this.kafka.consumer({
       groupId: this.configService.get<string>('KAFKA_GROUP_ID'),
       partitionAssigners: [
